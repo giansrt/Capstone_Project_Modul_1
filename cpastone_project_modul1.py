@@ -9,7 +9,7 @@ mobil = [
 ]
 users = [
     {'username' : 'admin', 'password':'admin123', 'role':'admin'},
-    {'username' : 'gian', 'password':'gian123', 'role':'user'}
+    {'username' : 'gian', 'password':'1', 'role':'user'}
 ]
 
 # for display main table
@@ -50,9 +50,9 @@ def display_rental_for_admin():
         tenant = value['tenant']
     
         
-        data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Padi of' if status else 'Debt' ])
-        print('\n Your Order ')
-        print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
+        data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
+    print('\n Your Order ')
+    print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 # ========================Add Data=====================================
 def add_data():
@@ -96,8 +96,8 @@ def display_rental():
         status = value['status']
         
         data_rent.append([index,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
-        print('\n Your Order ')
-        print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
+    print('\n Your Order ')
+    print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 
 # ======================= Rent Function ==================
@@ -107,12 +107,23 @@ def rental_vehicle():
         display_car()
         option = int(input('Input the index vehicle : '))
         if option not in range(len(mobil)):
-            print('Input the correct answer : ')
+            print('Input the correct answer !! ')
             continue
-        amount_car = int(input('Input the amount of the car : '))
         
-        date_start = input('Enter start date rent(in format dd/mm/yyyy): ')
+        amount_car = int(input('Input the amount of the car : '))
+        if amount_car > mobil[option]['stock']:
+            print(f'Stock not enough, stock left is {mobil[option]['stock']}')
+            continue
+        mobil[option]['stock'] -= amount_car
+        
+        date_start = input('Enter start date rent (in format dd/mm/yyyy): ')
         date_end = input('Enter end date rent (in format dd/mm/yyyy): ')
+        if '/' not in date_start or '/' not in date_end:
+            print("Invalid input date. Please enter the date in the format dd/mm/yyyy corectly !!!")
+            continue
+        elif date_start.count('/') != 2 or date_end.count('/') != 2:
+            print("Invalid input date. Please enter the date in the format dd/mm/yyyy corectly !!!")
+            continue
         day, month, year = map(int, date_start.split('/'))
         day_end, month_end, year_end = map(int, date_end.split('/'))
         
@@ -207,9 +218,12 @@ def main():
                 user = register() 
             else:
                 print("wrong input")
-        else :
+        elif option.lower() == 'no':
             print('Hello admin')
             user  = login()
+        else :
+            print('Input valid answer !!! ')
+            continue
 
         if user:
             print(f'Log in succes as {user["role"]}')
@@ -247,13 +261,16 @@ def main():
                     elif menu_num == 2:
                         rental_vehicle()
                     elif menu_num == 3:
+                        if len(rental_car)== 0:
+                            print('Rental Data Not aviliable !!')
+                            continue
                         display_rental()
                     elif menu_num == 4:
                         break
                     else:
                         print('Invalid option. Please choose again.')
         else:
-            print('wrong input')
+            print('wrong username / password')
 
 main()
 
