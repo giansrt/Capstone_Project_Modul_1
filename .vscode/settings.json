@@ -1,0 +1,5 @@
+{
+    "editor.codeLens": false,
+    "merge-conflict.codeLens.enabled": false,
+    "jupyter.interactiveWindow.codeLens.enableGotoCell": false
+}
