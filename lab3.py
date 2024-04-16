@@ -16,7 +16,9 @@ users = [
 data_car = []
    
 # contain with car rent by user
-rental_car = []
+data_rental_car = []
+
+# for table
 data_rent = []
 
 # ========================Display main table=====================================
@@ -39,7 +41,7 @@ def display_car():
 def display_rental_for_admin():
     data_rent.clear()
     header = ['Index','Tenant','Car Name','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
-    for index,value in enumerate(rental_car):
+    for index,value in enumerate(data_rental_car):
         name = value['name']
         number_of_car = value['amount']
         price = value['price']
@@ -51,7 +53,7 @@ def display_rental_for_admin():
     
         
         data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
-    print('\n Your Order ')
+    print('\n Users Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 # ========================Add Data=====================================
@@ -79,23 +81,28 @@ def delete_rental_for_admin():
     if option not in range(len(mobil)):
         print('Input the correct answer : ')
     else:
-        del rental_car[option]
-    display_rental_for_admin()
+        for key,value in enumerate(mobil):
+            if data_rental_car[option]['name'] == value['name']:
+                value['stock'] += data_rental_car[option]['amount'] 
+        del data_rental_car[option]
+    # display_rental_for_admin()
 
 # ========================Display rental car=====================================
 def display_rental():
     data_rent.clear()
-    header = ['Index','Car Name','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
-    for index,value in enumerate(rental_car):
-        name = value['name']
-        number_of_car = value['amount']
-        price = value['price']
-        long_rent = value['long rent']
-        start_date = value['start']
-        end_date = value['end']
-        status = value['status']
-        
-        data_rent.append([index,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
+    header = ['Index','Tenant','Car Name','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
+    for index,value in enumerate(data_rental_car):
+        if user['username'] == value['tenant'] :
+            tenant = value['tenant']
+            name = value['name']
+            number_of_car = value['amount']
+            price = value['price']
+            long_rent = value['long rent']
+            start_date = value['start']
+            end_date = value['end']
+            status = value['status']
+            
+            data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
     print('\n Your Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
@@ -146,7 +153,7 @@ def rental_vehicle():
                              'price' : price_rent,
                              'status' : False}
 
-        rental_car.append(temp_data)
+        data_rental_car.append(temp_data)
         data_rent.clear()
         display_rental()
         decision = input('Do you want to make another transaction (yes/no)? ')
@@ -156,7 +163,7 @@ def rental_vehicle():
 def count_peyment():
 # Count total bill
     price = 0
-    for key, value in enumerate(rental_car):
+    for key, value in enumerate(data_rental_car):
         if value['status'] == False:
             price += value['price']
     print(f'your total price is {price}')
@@ -167,14 +174,14 @@ def count_peyment():
         elif user_money>price:
             print('Thank you')
             print(f'Your change is {user_money - price}')
-            for ky,value in enumerate(rental_car):
+            for ky,value in enumerate(data_rental_car):
                 value['status'] = True
             data_rent.clear()
             display_rental()
             break
         elif user_money == price:
             print('Thank you')
-            for ky,value in enumerate(rental_car):
+            for ky,value in enumerate(data_rental_car):
                 value['status'] = True
             data_rent.clear()
             display_rental()
@@ -210,7 +217,7 @@ def main():
                 Welcome
             Need A vehicle
         This Is The Right Place''')
-        option = input('want to rent vehicle (yes/no) : ')
+        option = input('Are you logged in as a user (yes/no) : ')
         if option.lower() == 'yes':
             option = input('Have an account (yes/no) ? ')
             if option.lower() == 'yes':
@@ -231,9 +238,9 @@ def main():
             print(f'Log in succes as {user["role"]}')
             if user['role'] == 'admin' :
                 while True:
-                    print('Welcome Admin')
+                    print('Hai Admin')
                     print()
-                    print('List Menu:\n 1. Display Car\n 2. Adding Car\n 3. Removing Car\n 4. Display Rental\n 5. Delete user rental dat\n 6. Exit Program') 
+                    print('List Menu:\n 1. Display Car\n 2. Adding Car\n 3. Removing Car\n 4. Display Rental\n 5. Delete user rental data\n 6. Exit Program') 
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
@@ -249,8 +256,14 @@ def main():
                     elif menu_num == 3:
                         delete()
                     elif menu_num == 4:
+                        if len(data_rental_car)== 0:
+                            print('User don\'t rental yet !!')
+                            continue
                         display_rental_for_admin()
                     elif menu_num == 5:
+                        if len(data_rental_car)== 0:
+                            print('User don\'t rental yet !!')
+                            continue
                         delete_rental_for_admin()
                     elif menu_num == 6:
                         break
@@ -272,7 +285,7 @@ def main():
                     elif menu_num == 2:
                         rental_vehicle()
                     elif menu_num == 3:
-                        if len(rental_car)== 0:
+                        if len(data_rental_car)== 0:
                             print('You haven\'t done a rental yet !!')
                             continue
                         display_rental()
