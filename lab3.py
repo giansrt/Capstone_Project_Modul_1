@@ -109,12 +109,14 @@ def rental_vehicle():
         if option not in range(len(mobil)):
             print('Input the correct answer !! ')
             continue
-        
-        amount_car = int(input('Input the amount of the car : '))
-        if amount_car > mobil[option]['stock']:
-            print(f'Stock not enough, stock left is {mobil[option]['stock']}')
-            continue
-        mobil[option]['stock'] -= amount_car
+        while True:
+            amount_car = int(input('Input the amount of the car you want to rent : '))
+            if amount_car > mobil[option]['stock']:
+                print(f'Not enough stock, remaining {mobil[option]['name']} stock is {mobil[option]['stock']}')
+                continue
+            else :
+                mobil[option]['stock'] -= amount_car
+                break
         
         date_start = input('Enter start date rent (in format dd/mm/yyyy): ')
         date_end = input('Enter end date rent (in format dd/mm/yyyy): ')
@@ -233,7 +235,12 @@ def main():
                     print()
                     print('List Menu:\n 1. Display Car\n 2. Adding Car\n 3. Removing Car\n 4. Display Rental\n 5. Delete user rental dat\n 6. Exit Program') 
                     menu_num = input('Enter your chosen number: ')
-                    menu_num = int(menu_num)
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                    else:
+                        print('Pleas Input Integer not string or include string')
+                        continue
+                        
 
                     if menu_num == 1:
                         display_car()
@@ -255,14 +262,18 @@ def main():
                     print()
                     print('List Menu:\n 1. Display Eviliable Car\n 2. Rental Car\n 3. Display Rent \n 4. Exit Program')
                     menu_num = input('Enter your chosen number: ')
-                    menu_num = int(menu_num)
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                    else:
+                        print('Pleas Input Integer not string or include string')
+                        continue
                     if menu_num == 1:
                         display_car()
                     elif menu_num == 2:
                         rental_vehicle()
                     elif menu_num == 3:
                         if len(rental_car)== 0:
-                            print('Rental Data Not aviliable !!')
+                            print('You haven\'t done a rental yet !!')
                             continue
                         display_rental()
                     elif menu_num == 4:
