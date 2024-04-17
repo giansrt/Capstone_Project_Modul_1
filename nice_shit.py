@@ -18,16 +18,24 @@ def is_valid_date_format(date_string):
         print("Input the right month !!")
         return False
     
-    if not (1 <= day <= 31):
-        print("Input the right day  !!")
+    # Validasi hari berdasarkan bulan dan tahun (contoh sederhana)
+    if month in [1, 3, 5, 7, 8, 10, 12]:
+        max_day = 31
+    elif month in [4, 6, 9, 11]:
+        max_day = 30
+    elif month == 2:
+        # Periksa tahun kabisat untuk Februari
+        if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):
+            max_day = 29
+        else:
+            max_day = 28
+    else:
+        print("Input the right day !!")
+        return False
+    
+    if not (1 <= day <= max_day):
+        print(max_day)
+        print("Input the right day 2 !!")
         return False
     
     return True
-
-if not is_valid_date_format(date_start) or not is_valid_date_format(date_end):
-    print("Invalid input date. Please enter the date in the format dd/mm/yyyy correctly !!!")
-    # Lakukan tindakan lanjutan jika input tanggal tidak valid
-    continue
-else:
-    day, month, year = map(int, date_start.split('/'))
-    day_end, month_end, year_end = map(int, date_end.split('/'))

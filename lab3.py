@@ -106,6 +106,32 @@ def display_rental():
     print('\n Your Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
+# ===================== Validate Format date function ====
+def is_valid_date_format(date_string):
+    parts = date_string.split('/')
+    if len(parts) != 3:
+        print("Input the right format !!")
+        return False
+    
+    day, month, year = parts
+    if not (day.isdigit() and month.isdigit() and year.isdigit()):
+        print("Dont input as a string !!")
+        return False
+    
+    day = int(day)
+    month = int(month)
+    year = int(year)
+    
+    # Validasi bulan dan tahun
+    if not (1 <= month <= 12):
+        print("Input the right month !!")
+        return False
+    
+    if not (1 <= day <= 31):
+        print("Input the right day  !!")
+        return False
+    
+    return True
 
 # ======================= Rent Function ==================
 def rental_vehicle():
@@ -122,23 +148,21 @@ def rental_vehicle():
                 print(f'Not enough stock, remaining {mobil[option]['name']} stock is {mobil[option]['stock']}')
                 continue
             else :
-                mobil[option]['stock'] -= amount_car
                 break
-        
         date_start = input('Enter start date rent (in format dd/mm/yyyy): ')
         date_end = input('Enter end date rent (in format dd/mm/yyyy): ')
-        if '/' not in date_start or '/' not in date_end:
-            print("Invalid input date. Please enter the date in the format dd/mm/yyyy corectly !!!")
+        
+        if is_valid_date_format(date_start) and is_valid_date_format(date_end):
+            day, month, year = map(int, date_start.split('/'))
+            day_end, month_end, year_end = map(int, date_end.split('/'))
+        else:
+            print("Please correct the input dates.")
             continue
-        elif date_start.count('/') != 2 or date_end.count('/') != 2:
-            print("Invalid input date. Please enter the date in the format dd/mm/yyyy corectly !!!")
-            continue
-        day, month, year = map(int, date_start.split('/'))
-        day_end, month_end, year_end = map(int, date_end.split('/'))
+        
+        mobil[option]['stock'] -= amount_car
         
         start_date = dt.date(year, month, day)
         end_date = dt.date(year_end,month_end,day_end)
-        
         long_rent = (end_date - start_date).days
     
         for key, value in enumerate(mobil):
