@@ -2,11 +2,19 @@
 from tabulate import tabulate
 import datetime as dt
 # ============================= Data =====================================
-mobil = [
-    {"name": "Toyota Avanza", "stock": 5, "price": 200000},
-    {"name": "Honda Civic", "stock": 3, "price": 300000},
-    {"name": "Suzuki Ertiga", "stock": 4, "price": 250000}
+vehicles = [
+    {'brand': 'Honda', 'model': 'Civic', 'stock': 5, 'wheels': 4, 'price': 4000000},
+    {'brand': 'Honda', 'model': 'Super Cub', 'stock': 5, 'wheels': 2, 'price': 500000},
+    {'brand': 'Kawasaki', 'model': 'Ninja', 'stock': 5, 'wheels': 2, 'price': 800000},
+    {'brand': 'Toyota', 'model': 'Camry', 'stock': 5, 'wheels': 4, 'price': 3000000},
+    {'brand': 'Suzuki', 'model': 'Address', 'stock': 5, 'wheels': 2, 'price': 300000},
+    {'brand': 'Ford', 'model': 'Mustang', 'stock': 5, 'wheels': 4, 'price': 5000000},
+    {'brand': 'Piaggio', 'model': 'Vespa', 'stock': 5, 'wheels': 2, 'price': 400000},
+    {'brand': 'Chevrolet', 'model': 'Malibu', 'stock': 5, 'wheels': 4, 'price': 6000000},
+    {'brand': 'Yamaha', 'model': 'NMAX', 'stock': 5, 'wheels': 2, 'price': 600000},
+    {'brand': 'Kia', 'model': 'Optima', 'stock': 5, 'wheels': 4, 'price': 7000000}
 ]
+
 users = [
     {'username' : 'admin', 'password':'admin123', 'role':'admin'},
     {'username' : 'gian', 'password':'1', 'role':'user'}
@@ -22,27 +30,67 @@ data_rental_car = []
 data_rent = []
 
 # ========================Display main table=====================================
-def display_car():
+def display_vehicles():
+    mobil_sorted = sorted(vehicles, key=lambda x : x['wheels'], reverse=True)
     data_car.clear()
-    header_mobil = ['Index','Nama Mobil', 'Stock', 'Rent Price per Day']
-    for index,value in enumerate(mobil):
-        name = value['name']
+    header_mobil = ['Index', 'Brand','Model', 'Wheels', 'Stock', 'Rent Price per Day','Status']
+    rodas = {
+        4: [],
+        2: []
+    }
+
+    for index, value in enumerate(mobil_sorted):
+        brand = value['brand']
+        model = value['model']
         stock = value['stock']
+        wheels = value['wheels']
         price = value['price']
-        if stock > 0 :
-            data_car.append([index,name,stock,price])
-    if data_car:
-        print('\nAviliable Car')
-        print(tabulate(data_car, headers=header_mobil,tablefmt='fancy_grid'))
-    else:
-        print("No car aviliable !! ")
-     
+        avaliable = "Avaliable" if stock > 0 else "Not Avaliable"
+        rodas[wheels].append([index, brand,model, wheels, stock, price,avaliable])
+
+    if rodas[4]:
+        print('\nRoda Empat:')
+        print(tabulate(rodas[4], headers=header_mobil, tablefmt='fancy_grid'))
+    if rodas[2]:
+        print('\nRoda Dua:')
+        print(tabulate(rodas[2], headers=header_mobil, tablefmt='fancy_grid'))
+    if not rodas[4] and not rodas[2]:
+        print("No vehicles available !! ")
+
+# ========================Display main table=====================================
+def display_vehicles_for_edit():
+    data_car.clear()
+    header_mobil = ['Index', 'Brand','Model', 'Wheels', 'Stock', 'Rent Price per Day','Status']
+    rodas = {
+        4: [],
+        2: []
+    }
+
+    for index, value in enumerate(vehicles):
+        brand = value['brand']
+        model = value['model']
+        stock = value['stock']
+        wheels = value['wheels']
+        price = value['price']
+        avaliable = "Avaliable" if stock > 0 else "Not Avaliable"
+        rodas[wheels].append([index, brand,model, wheels, stock, price,avaliable])
+
+    if rodas[4]:
+        print('\nRoda Empat:')
+        print(tabulate(rodas[4], headers=header_mobil, tablefmt='fancy_grid'))
+    if rodas[2]:
+        print('\nRoda Dua:')
+        print(tabulate(rodas[2], headers=header_mobil, tablefmt='fancy_grid'))
+    if not rodas[4] and not rodas[2]:
+        print("No vehicles available !! ")
+
 # ========================Display rental car for admin=====================================
 def display_rental_for_admin():
     data_rent.clear()
-    header = ['Index','Tenant','Car Name','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
+    header = ['Index','Tenant','Brand','Model','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
     for index,value in enumerate(data_rental_car):
-        name = value['name']
+        brand = value['brand']
+        model = value['model']
         number_of_car = value['amount']
         price = value['price']
         long_rent = value['long rent']
@@ -52,37 +100,72 @@ def display_rental_for_admin():
         tenant = value['tenant']
     
         
-        data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
+        data_rent.append([index,tenant,brand,model,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
     print('\n Users Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 # ========================Add Data=====================================
 def add_data():
-    new_data = {}
-    name = input('Input the vehicle name : ')   
-    stock = int(input('Input the vehicle stock : '))   
-    price = int(input('Input the vehicle price : '))   
-    new_data = {'name': name, 'stock': stock, 'price': price}
-    mobil.append(new_data)
+    while True:
+        brand = input('Input the vehicle brand : ') 
+        model = input('Input the vehicle model : ')
+        exists = any(v['brand'].lower() == brand.lower() and v['model'].lower() == model.lower() for v in vehicles)
+        if exists:
+            print('Vehicle already exists!')
+            continue
+        else:
+            while True:
+                stock = input('Input the vehicle stock : ')
+                if not stock.isdigit():
+                    print('Please enter numeric value for stock.')
+                else:
+                    stock = int(stock)
+                    break
+            while True:
+                wheel = input('Insert amount the vehicle wheel (4/2) : ')
+                if wheel == '4' or wheel == '2' :
+                    wheel = int(wheel)
+                    break
+                else:
+                    print('Please insert the right amount of wheel.')
+                    
+            while True:
+                price = input('Input the vehicle price : ')
+                if not price.isdigit():
+                    print('Please enter numeric value for stock.')
+                else:
+                    stock = int(price)
+                    break
+        new_vehicle = {
+            'brand': brand.capitalize().strip(),  
+            'model': model.capitalize().strip(), 
+            'stock': stock,
+            'wheels': wheel,
+            'price': price
+        }
+        print(vehicles)
+        vehicles.append(new_vehicle)
+        print(vehicles)
+        break
 
 # ========================Delete Data=====================================
 def delete():
+    display_vehicles_for_edit()
     option = int(input('Input vehicle index : '))
-    if option not in range(len(mobil)):
+    if option not in range(len(vehicles)):
         print('Input the correct answer : ')
     else:
-        del mobil[option]
-        print(mobil)
+        del vehicles[option]
 
 # ========================Delete Data rent=====================================
 def delete_rental_for_admin():
     display_rental_for_admin()
     option = int(input('Input rent user index : '))
-    if option not in range(len(mobil)):
+    if option not in range(len(vehicles)):
         print('Input the correct answer : ')
     else:
-        for key,value in enumerate(mobil):
-            if data_rental_car[option]['name'] == value['name']:
+        for key,value in enumerate(vehicles):
+            if data_rental_car[option]['brand'] == value['brand'] and data_rental_car[option]['model'] == value['model'] :
                 value['stock'] += data_rental_car[option]['amount'] 
         del data_rental_car[option]
     # display_rental_for_admin()
@@ -90,19 +173,20 @@ def delete_rental_for_admin():
 # ========================Display rental car=====================================
 def display_rental():
     data_rent.clear()
-    header = ['Index','Tenant','Car Name','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
+    header = ['Index','Tenant','Brand','Model','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
     for index,value in enumerate(data_rental_car):
         if user['username'] == value['tenant'] :
             tenant = value['tenant']
-            name = value['name']
             number_of_car = value['amount']
             price = value['price']
             long_rent = value['long rent']
             start_date = value['start']
             end_date = value['end']
             status = value['status']
+            brand = value['brand']
+            model = value['model']
             
-            data_rent.append([index,tenant,name,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
+            data_rent.append([index,tenant,brand,model,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
     print('\n Your Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
@@ -137,15 +221,15 @@ def is_valid_date_format(date_string):
 def rental_vehicle():
     temp_data = {}
     while True:
-        display_car()
+        display_vehicles_for_edit()
         option = int(input('Input the index vehicle : '))
-        if option not in range(len(mobil)):
+        if option not in range(len(vehicles)):
             print('Input the correct answer !! ')
             continue
         while True:
             amount_car = int(input('Input the amount of the car you want to rent : '))
-            if amount_car > mobil[option]['stock']:
-                print(f'Not enough stock, remaining {mobil[option]['name']} stock is {mobil[option]['stock']}')
+            if amount_car > vehicles[option]['stock']:
+                print(f'Not enough stock, remaining {vehicles[option]['brand']} model {vehicles[option]['model']} stock is {vehicles[option]['stock']}')
                 continue
             else :
                 break
@@ -159,17 +243,18 @@ def rental_vehicle():
             print("Please correct the input dates.")
             continue
         
-        mobil[option]['stock'] -= amount_car
+        vehicles[option]['stock'] -= amount_car
         
         start_date = dt.date(year, month, day)
         end_date = dt.date(year_end,month_end,day_end)
         long_rent = (end_date - start_date).days
     
-        for key, value in enumerate(mobil):
+        for key, value in enumerate(vehicles):
             if option == key :
                 price_rent =value["price"] * long_rent * amount_car
                 temp_data = {'tenant' : user['username'],
-                             'name' : value['name'],
+                             'brand' : value['brand'],
+                             'model' : value['model'],
                              'amount' : amount_car,
                              'long rent': long_rent,
                              'start' : start_date.strftime('%d %B %Y'),
@@ -213,6 +298,7 @@ def count_peyment():
 
 # =============Registration and Log in=========================================
 def login():
+    print()
     username = input('Input username : ')
     password = input('Input password : ')
     for user in users:
@@ -236,90 +322,12 @@ def register():
         
         
 def main():
-    while True:
-        welcome_ascii()
-        print('''
-                Welcome
-            Need A vehicle
-        This Is The Right Place''')
-        option = input('Are you logged in as a user (yes/no) : ')
-        if option.lower() == 'yes':
-            option = input('Have an account (yes/no) ? ')
-            if option.lower() == 'yes':
-                global user
-                user = login()
-            elif option.lower() == 'no':
-                user = register() 
-            else:
-                print("wrong input")
-        elif option.lower() == 'no':
-            print('Hello admin')
-            user  = login()
-        else :
-            print('Input valid answer !!! ')
-            continue
-
-        if user:
-            print(f'Log in succes as {user["role"]}')
-            if user['role'] == 'admin' :
-                while True:
-                    print('Hai Admin')
-                    print()
-                    print('List Menu:\n 1. Display Car\n 2. Adding Car\n 3. Removing Car\n 4. Display Rental\n 5. Delete user rental data\n 6. Exit Program') 
-                    menu_num = input('Enter your chosen number: ')
-                    if menu_num.isdigit():
-                        menu_num = int(menu_num)
-                    else:
-                        print('Pleas Input Integer not string or include string')
-                        continue
-                        
-
-                    if menu_num == 1:
-                        display_car()
-                    elif menu_num == 2:
-                        add_data()
-                    elif menu_num == 3:
-                        delete()
-                    elif menu_num == 4:
-                        if len(data_rental_car)== 0:
-                            print('User don\'t rental yet !!')
-                            continue
-                        display_rental_for_admin()
-                    elif menu_num == 5:
-                        if len(data_rental_car)== 0:
-                            print('User don\'t rental yet !!')
-                            continue
-                        delete_rental_for_admin()
-                    elif menu_num == 6:
-                        break
-                    else:
-                        print('Invalid option. Please choose again.')
-            else:
-                while True:
-                    print('Welcome User')
-                    print()
-                    print('List Menu:\n 1. Display Eviliable Car\n 2. Rental Car\n 3. Display Rent \n 4. Exit Program')
-                    menu_num = input('Enter your chosen number: ')
-                    if menu_num.isdigit():
-                        menu_num = int(menu_num)
-                    else:
-                        print('Pleas Input Integer not string or include string')
-                        continue
-                    if menu_num == 1:
-                        display_car()
-                    elif menu_num == 2:
-                        rental_vehicle()
-                    elif menu_num == 3:
-                        if len(data_rental_car)== 0:
-                            print('You haven\'t done a rental yet !!')
-                            continue
-                        display_rental()
-                    elif menu_num == 4:
-                        break
-                    else:
-                        print('Invalid option. Please choose again.')
-        else:
-            print('wrong username / password')
+    welcome_ascii()
+    print('''
+            Welcome
+        Need A vehicle
+    This Is The Right Place''')
+    validation_mesg()
 # =============== welcome ascii ==========
 def welcome_ascii():
     print()
@@ -347,6 +355,94 @@ def welcome_ascii():
 
     for line in car:
         print(line)
+# ================ messge ================
+def validation_mesg():
+    while True:
+        option = input('Are you logged in as a user (yes/no): ').strip().lower()
+        if option in ['yes', 'no']:
+            if option == 'yes':
+                account_option = input('Do you have an account (yes/no) ? ').strip().lower()
+                if account_option in ['yes', 'no']:
+                    if account_option == 'yes':
+                        global user
+                        user = login()
+                    elif account_option == 'no':
+                        user = register()
+                    else:
+                        print("Wrong input")
+                        continue
+                else:
+                    print('You can only input yes/no')
+                    continue
+            else:  
+                print('Hello admin')
+                user = login()  
+        else:
+            print('Please input yes or no.')
+            continue
+
+        if user:
+            print(f'Login successful as {user["role"]}')
+            print()
+            if user['role'] == 'admin':
+                while True:
+                    print('Hi Admin')
+                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Display Rentals\n 5. Delete User Rental Data\n 6. Exit Program')
+                    menu_num = input('Enter your chosen number: ')
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                        if menu_num == 1:
+                            display_vehicles()
+                        elif menu_num == 2:
+                            add_data()
+                        elif menu_num == 3:
+                            delete()
+                        elif menu_num == 4:
+                            if len(data_rental_car) == 0:
+                                print('No rentals yet.')
+                            else:
+                                display_rental_for_admin()
+                        elif menu_num == 5:
+                            if len(data_rental_car) == 0:
+                                print('No rentals yet.')
+                            else:
+                                delete_rental_for_admin()
+                        elif menu_num == 6:
+                            break
+                        else:
+                            print('Invalid option. Please choose again.')
+                    else:
+                        print('Please input an integer.')
+            else:  # Regular user
+                while True:
+                    print(f'Welcome {user['username'].capitalize()}')
+                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent a Car\n 3. Display Rentals \n 4. Exit Program')
+                    menu_num = input('Enter your chosen number: ')
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                        if menu_num == 1:
+                            display_vehicles()
+                        elif menu_num == 2:
+                            rental_vehicle()
+                        elif menu_num == 3:
+                            if len(data_rental_car) == 0:
+                                print('You haven\'t rented any car yet.')
+                            else:
+                                display_rental()
+                        elif menu_num == 4:
+                            break
+                        else:
+                            print('Invalid option. Please choose again.')
+                    else:
+                        print('Please input an integer.')
+        else:
+            print('Wrong username or password')
+
+
+
+
+
+
 
 main()
 

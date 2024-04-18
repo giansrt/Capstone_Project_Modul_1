@@ -1,94 +1,81 @@
-# Contoh data user dan admin (dapat disimpan dalam list of dictionaries)
-users = [
-    {"username": "admin", "password": "admin123", "role": "admin"},
-    {"username": "john_doe", "password": "12345", "role": "user"}
-]
-
-# Contoh data mobil (dapat disimpan dalam list of dictionaries)
-mobil = [
-    {"nama": "Toyota Avanza", "stok": 5, "harga_sewa": 200000},
-    {"nama": "Honda Civic", "stok": 3, "harga_sewa": 300000},
-    {"nama": "Suzuki Ertiga", "stok": 4, "harga_sewa": 250000}
-]
-
-# Fungsi untuk login user
-def login(username, password):
-    for user in users:
-        if user["username"] == username and user["password"] == password:
-            return user
-    return None
-
-# Fungsi untuk menampilkan daftar mobil
-def display_mobil():
-    print("\nDaftar Mobil Tersedia:")
-    for index, mobil in enumerate(mobil):
-        print(f"Index: {index}")
-        print(f"Nama Mobil: {mobil['nama']}")
-        print(f"Stok: {mobil['stok']}")
-        print(f"Harga Sewa: Rp {mobil['harga_sewa']}")
-
-# Fungsi untuk menambahkan mobil (hanya bisa dilakukan oleh admin)
-def add_mobil(admin_user):
-    if admin_user["role"] == "admin":
-        nama = input("Masukkan nama mobil baru: ")
-        stok = int(input("Masukkan stok mobil baru: "))
-        harga_sewa = int(input("Masukkan harga sewa mobil baru: "))
-        mobil.append({"nama": nama, "stok": stok, "harga_sewa": harga_sewa})
-        print("Mobil baru berhasil ditambahkan.")
-    else:
-        print("Maaf, hanya admin yang dapat menambahkan mobil.")
-
-# Fungsi untuk melakukan pemesanan mobil (untuk user)
-def pesan_mobil(user):
-    display_mobil()
-    index_mobil = int(input("Masukkan nomor mobil yang ingin dipesan: "))
-    if 0 <= index_mobil < len(mobil):
-        jumlah = int(input("Masukkan jumlah mobil yang ingin dipesan: "))
-        if jumlah > 0 and jumlah <= mobil[index_mobil]["stok"]:
-            # Proses pemesanan mobil (contoh implementasi)
-            print(f"Pesanan {mobil[index_mobil]['nama']} ({jumlah} unit) berhasil.")
-            mobil[index_mobil]["stok"] -= jumlah
-        else:
-            print("Jumlah mobil tidak valid atau stok tidak mencukupi.")
-    else:
-        print("Nomor mobil tidak valid.")
-
-# Contoh penggunaan dalam main program
-def main():
+def validation_mesg():
     while True:
-        print("\nSelamat datang di Rental Mobil")
-        username = input("Masukkan username: ")
-        password = input("Masukkan password: ")
-        user = login(username, password)
-        
-        if user:
-            print(f"Login berhasil sebagai {user['role']}")
-            if user["role"] == "admin":
-                # Menu admin
-                print("Menu Admin:")
-                print("1. Tambah Mobil")
-                print("2. Lihat Daftar Mobil")
-                choice = input("Pilih menu: ")
-                if choice == "1":
-                    add_mobil(user)
-                elif choice == "2":
-                    display_mobil()
+        option = input('Are you logged in as a user (yes/no): ').strip().lower()
+        if option in ['yes', 'no']:
+            if option == 'yes':
+                account_option = input('Do you have an account (yes/no) ? ').strip().lower()
+                if account_option in ['yes', 'no']:
+                    if account_option == 'yes':
+                        global user
+                        user = login()
+                    elif account_option == 'no':
+                        user = register()
+                    else:
+                        print("Wrong input")
+                        continue
                 else:
-                    print("Pilihan tidak valid.")
-            else:
-                # Menu user
-                print("Menu User:")
-                print("1. Lihat Daftar Mobil")
-                print("2. Pesan Mobil")
-                choice = input("Pilih menu: ")
-                if choice == "1":
-                    display_mobil()
-                elif choice == "2":
-                    pesan_mobil(user)
-                else:
-                    print("Pilihan tidak valid.")
+                    print('You can only input yes/no')
+                    continue
+            else:  # option == 'no'
+                print('Hello admin')
+                user = login()  # Assuming login function handles admin login
         else:
-            print("Login gagal. Silakan coba lagi.")
+            print('Please input yes or no.')
+            continue
 
-if __name__ == "__main__":
-    main()
+        if user:
+            print(f'Login successful as {user["username"]}')
+            if user['role'] == 'admin':
+                while True:
+                    print('Hi Admin')
+                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Display Rentals\n 5. Delete User Rental Data\n 6. Exit Program')
+                    menu_num = input('Enter your chosen number: ')
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                        if menu_num == 1:
+                            display_car()
+                        elif menu_num == 2:
+                            add_data()
+                        elif menu_num == 3:
+                            delete()
+                        elif menu_num == 4:
+                            if len(data_rental_car) == 0:
+                                print('No rentals yet.')
+                            else:
+                                display_rental_for_admin()
+                        elif menu_num == 5:
+                            if len(data_rental_car) == 0:
+                                print('No rentals yet.')
+                            else:
+                                delete_rental_for_admin()
+                        elif menu_num == 6:
+                            break
+                        else:
+                            print('Invalid option. Please choose again.')
+                    else:
+                        print('Please input an integer.')
+            else:  # Regular user
+                while True:
+                    print('Welcome User')
+                    print('List Menu:\n 1. Display Available Cars\n 2. Rent a Car\n 3. Display Rentals \n 4. Exit Program')
+                    menu_num = input('Enter your chosen number: ')
+                    if menu_num.isdigit():
+                        menu_num = int(menu_num)
+                        if menu_num == 1:
+                            display_car()
+                        elif menu_num == 2:
+                            rental_vehicle()
+                        elif menu_num == 3:
+                            if len(data_rental_car) == 0:
+                                print('You haven\'t rented any car yet.')
+                            else:
+                                display_rental()
+                        elif menu_num == 4:
+                            break
+                        else:
+                            print('Invalid option. Please choose again.')
+                    else:
+                        print('Please input an integer.')
+        else:
+            print('Wrong username or password')
+
