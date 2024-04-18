@@ -339,13 +339,14 @@ def register():
     print('Let do registration')
     while True:
         username = input('Input one word of your name as username : ')
-        if any(username.lower() == user['username'] for user in users):
+        if any(username.strip().lower() == user['username'] for user in users):
             print(f"There is an account with the username {username}. Please choose a different username.")
         else :
             break
     password = input('Input your password : ')
     temp = {'username' : username, 'password':password, 'role':'user'}
     users.append(temp)
+    print('Registration success')
     return temp
 # ========================================================================        
         
@@ -386,37 +387,43 @@ def welcome_ascii():
         print(line)
 # ================ messge ================
 def validation_mesg():
-    while True:
-        option = input('Are you logged in as a user (yes/no): ').strip().lower()
-        if option in ['yes', 'no']:
-            if option == 'yes':
-                account_option = input('Do you have an account (yes/no) ? ').strip().lower()
-                if account_option in ['yes', 'no']:
-                    if account_option == 'yes':
-                        global user
-                        user = login()
-                    elif account_option == 'no':
-                        user = register()
-                    else:
-                        print("Wrong input")
-                        continue
+    while True :
+        while True:
+            print('You can enter as : ')
+            print('1.User')
+            print('2.User')
+            while True :
+                execute = input('type \'exit\' to exit the program or press enter to continue : ').strip().lower()
+                if not execute:
+                    break
+                elif execute == 'exit':
+                    print('Thank You')
+                    return False
                 else:
-                    print('You can only input yes/no')
+                    print('insert the right word \'exit\' ')
+            account_option = input('''Do you have an account (yes/no) ? ''').strip().lower()
+            if account_option in ['yes', 'no']:
+                if account_option == 'yes':
+                    global user
+                    user = login()
+                    break
+                elif account_option == 'no':
+                    user = register()
+                    break
+                else:
+                    print("Wrong input")
                     continue
-            else:  
-                print('Hello admin')
-                user = login()  
-        else:
-            print('Please input yes or no.')
-            continue
-
+            else:
+                print('You can only input yes/no')
+                continue
+            
         if user:
             print(f'Login successful as {user["role"]}')
             print()
             if user['role'] == 'admin':
                 while True:
                     print('Hi Admin')
-                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Update Stock and/or Price\n 5. Display Rentals\n 6. Delete User Rental Data\n 7. Exit Program')
+                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Update Stock and/or Price\n 5. Display Rentals\n 6. Delete User Rental Data\n 7. Log out')
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
@@ -444,10 +451,10 @@ def validation_mesg():
                             print('Invalid option. Please choose again.')
                     else:
                         print('Please input an integer.')
-            else:  # Regular user
+            else: 
                 while True:
                     print(f'Welcome {user['username'].capitalize()}')
-                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent a Car\n 3. Display Rentals \n 4. Exit Program')
+                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent a Car\n 3. Display Rentals \n 4. Log out')
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
