@@ -156,6 +156,35 @@ def delete():
         print('Input the correct answer : ')
     else:
         del vehicles[option]
+# =================== Update stock and price ================================
+def update_stock_or_price():
+    display_vehicles_for_edit()
+    option = int(input('Input vehicle index : '))
+    if option not in range(len(vehicles)):
+        print('Input the correct answer : ')
+    else:
+        while True:
+            new_stock = input('insert the new stock (just enter to skip): ')
+            if not new_stock:
+                break
+            if not new_stock.isdigit():
+                print('Insert the right stock')
+                continue
+            else:
+                new_stock = int(new_stock)
+                vehicles[option]['stock'] = new_stock
+                break
+        while True:
+            new_price = input('insert the new price (just enter to skip) : ')
+            if not new_price:
+                break
+            if not new_price.isdigit():
+                print('Insert the right price')
+                continue
+            else:
+                new_price = int(new_price)
+                vehicles[option]['price'] = new_price
+                break    
 
 # ========================Delete Data rent=====================================
 def delete_rental_for_admin():
@@ -387,7 +416,7 @@ def validation_mesg():
             if user['role'] == 'admin':
                 while True:
                     print('Hi Admin')
-                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Display Rentals\n 5. Delete User Rental Data\n 6. Exit Program')
+                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Update Stock and/or Price\n 5. Display Rentals\n 6. Delete User Rental Data\n 7. Exit Program')
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
@@ -398,16 +427,18 @@ def validation_mesg():
                         elif menu_num == 3:
                             delete()
                         elif menu_num == 4:
-                            if len(data_rental_car) == 0:
-                                print('No rentals yet.')
-                            else:
-                                display_rental_for_admin()
+                            update_stock_or_price()
                         elif menu_num == 5:
                             if len(data_rental_car) == 0:
                                 print('No rentals yet.')
                             else:
-                                delete_rental_for_admin()
+                                display_rental_for_admin()
                         elif menu_num == 6:
+                            if len(data_rental_car) == 0:
+                                print('No rentals yet.')
+                            else:
+                                delete_rental_for_admin()
+                        elif menu_num == 7:
                             break
                         else:
                             print('Invalid option. Please choose again.')
