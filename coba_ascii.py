@@ -1,7 +1,6 @@
 # File: coba_ascii.py
 
-def print_ascii_art():
-    # ASCII art of a spaceship
+def welcome_ascii():
     spaceship = [
 "            \\ \\      / /__| | ___ ___  _ __ ___   ___  | |_ ___              ",
 "             \\ \\ /\\ / / _ \\ |/ __/ _ \\| '_ ` _ \\ / _ \\ | __/ _ \\             ",
@@ -14,11 +13,8 @@ def print_ascii_art():
 "            |___/                                                             "
     ]
 
-    # Print each line of the ASCII art spaceship
     for line in spaceship:
         print(line)
-
-    # ASCII art of a car
     car = [
 "  ___",
 "    _-_-  _/\\______\\__",
@@ -27,9 +23,7 @@ def print_ascii_art():
 "           `-'      `-'"
     ]
 
-    # Print each line of the ASCII art car
     for line in car:
         print(line)
 
-# Panggil fungsi untuk mencetak ASCII art
 print_ascii_art()
