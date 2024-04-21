@@ -45,6 +45,7 @@ def display_vehicles():
         stock = value['stock']
         wheels = value['wheels']
         price = value['price']
+        price = 'RP {:,.0f}'.format(price)
         avaliable = "Avaliable" if stock > 0 else "Not Avaliable"
         rodas[wheels].append([index, brand,model, wheels, stock, price,avaliable])
 
@@ -72,6 +73,7 @@ def display_vehicles_for_edit():
         stock = value['stock']
         wheels = value['wheels']
         price = value['price']
+        price = 'RP {:,.0f}'.format(price)
         avaliable = "Avaliable" if stock > 0 else "Not Avaliable"
         rodas[wheels].append([index, brand,model, wheels, stock, price,avaliable])
 
@@ -83,6 +85,26 @@ def display_vehicles_for_edit():
         print(tabulate(rodas[2], headers=header_mobil, tablefmt='fancy_grid'))
     if not rodas[4] and not rodas[2]:
         print("No vehicles available !! ")
+# ========================Display rental car for user=====================================
+def display_rental():
+    data_rent.clear()
+    header = ['Index','Tenant','Brand','Model','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
+    for index,value in enumerate(data_rental_car):
+        if user['username'] == value['tenant'] :
+            tenant = value['tenant']
+            number_of_car = value['amount']
+            price = value['price']
+            price = 'RP {:,.0f}'.format(price)
+            long_rent = value['long rent']
+            start_date = value['start']
+            end_date = value['end']
+            status = value['status']
+            brand = value['brand']
+            model = value['model']
+            
+            data_rent.append([index,tenant,brand,model,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
+    print('\n Your Order ')
+    print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 # ========================Display rental car for admin=====================================
 def display_rental_for_admin():
@@ -93,13 +115,13 @@ def display_rental_for_admin():
         model = value['model']
         number_of_car = value['amount']
         price = value['price']
+        price = 'Rp {:,.0f}'.format(price)
         long_rent = value['long rent']
         start_date = value['start']
         end_date = value['end']
         status = value['status']
         tenant = value['tenant']
-    
-        
+
         data_rent.append([index,tenant,brand,model,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
     print('\n Users Order ')
     print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
@@ -151,40 +173,60 @@ def add_data():
 # ========================Delete Data=====================================
 def delete():
     display_vehicles_for_edit()
-    option = int(input('Input vehicle index : '))
-    if option not in range(len(vehicles)):
-        print('Input the correct answer : ')
-    else:
-        del vehicles[option]
+    while True:
+        option = input('Input vehicle index : ')
+        if not option:
+            continue
+        elif not option.isdigit():
+            print('insert the index as number')
+            continue
+        else:
+            option= int(option)
+        if option not in range(len(vehicles)):
+            print('Input the correct answer ')
+            continue
+        else:
+            print('delete success')
+            del vehicles[option]
+            break
 # =================== Update stock and price ================================
 def update_stock_or_price():
     display_vehicles_for_edit()
-    option = int(input('Input vehicle index : '))
-    if option not in range(len(vehicles)):
-        print('Input the correct answer : ')
-    else:
-        while True:
-            new_stock = input('insert the new stock (just enter to skip): ')
-            if not new_stock:
-                break
-            if not new_stock.isdigit():
-                print('Insert the right stock')
-                continue
-            else:
-                new_stock = int(new_stock)
-                vehicles[option]['stock'] = new_stock
-                break
-        while True:
-            new_price = input('insert the new price (just enter to skip) : ')
-            if not new_price:
-                break
-            if not new_price.isdigit():
-                print('Insert the right price')
-                continue
-            else:
-                new_price = int(new_price)
-                vehicles[option]['price'] = new_price
-                break    
+    while True:
+        option = input('Input vehicle index : ')
+        if not option:
+            continue
+        elif not option.isdigit():
+            print('Insert a numbers')
+            continue
+        else:
+            option = int(option)
+        if option not in range(len(vehicles)):
+            print('Input the correct answer ')
+        else:
+            while True:
+                new_stock = input('insert the new stock (just enter to skip): ')
+                if not new_stock:
+                    break
+                if not new_stock.isdigit():
+                    print('Insert the right stock')
+                    continue
+                else:
+                    new_stock = int(new_stock)
+                    vehicles[option]['stock'] = new_stock
+                    break
+            while True:
+                new_price = input('insert the new price (just enter to skip) : ')
+                if not new_price:
+                    break
+                if not new_price.isdigit():
+                    print('Insert the right price')
+                    continue
+                else:
+                    new_price = int(new_price)
+                    vehicles[option]['price'] = new_price
+                    break  
+            break  
 
 # ========================Delete Data rent=====================================
 def delete_rental_for_admin():
@@ -199,25 +241,6 @@ def delete_rental_for_admin():
         del data_rental_car[option]
     # display_rental_for_admin()
 
-# ========================Display rental car=====================================
-def display_rental():
-    data_rent.clear()
-    header = ['Index','Tenant','Brand','Model','Amount','Start Rent','End Rent','Long Rent','Rent price','Status Payment']
-    for index,value in enumerate(data_rental_car):
-        if user['username'] == value['tenant'] :
-            tenant = value['tenant']
-            number_of_car = value['amount']
-            price = value['price']
-            long_rent = value['long rent']
-            start_date = value['start']
-            end_date = value['end']
-            status = value['status']
-            brand = value['brand']
-            model = value['model']
-            
-            data_rent.append([index,tenant,brand,model,number_of_car,start_date,end_date,long_rent,price,'Paid of' if status else 'Debt' ])
-    print('\n Your Order ')
-    print(tabulate(data_rent, headers=header,tablefmt='fancy_grid'))
 
 # ===================== Validate Format date function ====
 def is_valid_date_format(date_string):
@@ -234,6 +257,7 @@ def is_valid_date_format(date_string):
     day = int(day)
     month = int(month)
     year = int(year)
+    current_year = dt.datetime.now().year
     
     # Validasi bulan dan tahun
     if not (1 <= month <= 12):
@@ -243,40 +267,72 @@ def is_valid_date_format(date_string):
     if not (1 <= day <= 31):
         print("Input the right day  !!")
         return False
+    if year < current_year:
+        print('Insert valid year !!')
+        return False
+    
     
     return True
 
 # ======================= Rent Function ==================
 def rental_vehicle():
     temp_data = {}
+    # display_vehicles_for_edit()
     while True:
         display_vehicles_for_edit()
-        option = int(input('Input the index vehicle : '))
+        option = input('Input the index vehicle : ')
+        if not option:
+            continue
+        if not option.isdigit():
+            print('Insert numbers as index')
+            continue
+        else:
+            option = int(option)
+        if vehicles[option]['stock'] == 0:
+            print(f'Vehicle you choose not avaliable anymore because stock left is {vehicles[option]['stock']}')
+            continue
         if option not in range(len(vehicles)):
             print('Input the correct answer !! ')
             continue
         while True:
-            amount_car = int(input('Input the amount of the car you want to rent : '))
+            amount_car = input('Input the amount of the vehicle you want to rent : ')
+            if not amount_car:
+                print('insert the amount')
+                continue
+            elif not amount_car.isdigit():
+                print('Insert number to decide amount vehicle')
+                continue
+            else:
+                amount_car = int(amount_car)
             if amount_car > vehicles[option]['stock']:
                 print(f'Not enough stock, remaining {vehicles[option]['brand']} model {vehicles[option]['model']} stock is {vehicles[option]['stock']}')
                 continue
             else :
+                vehicles[option]['stock'] -= amount_car
                 break
-        date_start = input('Enter start date rent (in format dd/mm/yyyy): ')
-        date_end = input('Enter end date rent (in format dd/mm/yyyy): ')
-        
-        if is_valid_date_format(date_start) and is_valid_date_format(date_end):
-            day, month, year = map(int, date_start.split('/'))
-            day_end, month_end, year_end = map(int, date_end.split('/'))
-        else:
-            print("Please correct the input dates.")
-            continue
-        
-        vehicles[option]['stock'] -= amount_car
-        
-        start_date = dt.date(year, month, day)
-        end_date = dt.date(year_end,month_end,day_end)
-        long_rent = (end_date - start_date).days
+        while True:
+            date_start = input('Enter start date rent (in format dd/mm/yyyy): ')
+            date_end = input('Enter end date rent (in format dd/mm/yyyy): ')
+            if not date_start or not date_end:
+                print('please insert all date')
+                continue
+            elif is_valid_date_format(date_start) and is_valid_date_format(date_end):
+                day, month, year = map(int, date_start.split('/'))
+                day_end, month_end, year_end = map(int, date_end.split('/'))
+            else:
+                print("Please correct the input dates.")
+                continue
+            start_date = dt.date(year, month, day)
+            end_date = dt.date(year_end,month_end,day_end)
+            
+            
+            if start_date >end_date :
+                print('Your input date not valid')
+            elif start_date == end_date:
+                print('minimum rent is 1 day')
+            else:
+                long_rent = (end_date - start_date).days
+                break
     
         for key, value in enumerate(vehicles):
             if option == key :
@@ -298,20 +354,41 @@ def rental_vehicle():
         if decision.lower() != 'yes':
             count_peyment()
             break
+        
+# def valid_value_int(myint):
+#     if not myint:
+#         print('Insert valid value')
+#         return False
+#     elif not myint.isdigit():
+#         print('Insert valid value')
+#         return False
+#     else:
+#         myint = int(myint)
+#         return myint
+
 def count_peyment():
 # Count total bill
     price = 0
     for key, value in enumerate(data_rental_car):
         if value['status'] == False:
             price += value['price']
-    print(f'your total price is {price}')
+    print(f'your total price is Rp {price:,}')
     while True :
-        user_money = int(input('Input your money : '))
+        user_money = input('Input your money : ')
+        if not user_money:
+            print('Insert valid value')
+            continue
+        elif not user_money.isdigit():
+            print('Insert valid value')
+            continue
+        else:
+            user_money = int(user_money)
+    
         if price > user_money :
-            print(f'Your money is not enough, you need to pay {price}')
+            print(f'Your money is not enough, you need to pay {price:,}')
         elif user_money>price:
             print('Thank you')
-            print(f'Your change is {user_money - price}')
+            print(f'Your change is Rp {user_money - price:,}')
             for ky,value in enumerate(data_rental_car):
                 value['status'] = True
             data_rent.clear()
@@ -391,7 +468,7 @@ def validation_mesg():
         while True:
             print('You can enter as : ')
             print('1.User')
-            print('2.User')
+            print('2.Admin')
             while True :
                 execute = input('type \'exit\' to exit the program or press enter to continue : ').strip().lower()
                 if not execute:
@@ -423,7 +500,7 @@ def validation_mesg():
             if user['role'] == 'admin':
                 while True:
                     print('Hi Admin')
-                    print('List Menu:\n 1. Display Cars\n 2. Add Car\n 3. Remove Car\n 4. Update Stock and/or Price\n 5. Display Rentals\n 6. Delete User Rental Data\n 7. Log out')
+                    print('List Menu:\n 1. Display Vehicle\n 2. Add Vehicle\n 3. Remove Vehicle\n 4. Update Stock and/or Price\n 5. Display Rentals\n 6. Delete User Rental Data\n 7. Log out')
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
@@ -454,7 +531,7 @@ def validation_mesg():
             else: 
                 while True:
                     print(f'Welcome {user['username'].capitalize()}')
-                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent a Car\n 3. Display Rentals \n 4. Log out')
+                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent Vehicle\n 3. Display Rentals \n 4. Log out')
                     menu_num = input('Enter your chosen number: ')
                     if menu_num.isdigit():
                         menu_num = int(menu_num)
@@ -484,6 +561,7 @@ def validation_mesg():
 
 main()
 
-
+if __name__ == '__main__':
+    main()
 
     
