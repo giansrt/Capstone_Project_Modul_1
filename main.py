@@ -31,7 +31,6 @@ data_rent = []
 
 # ========================Display main table=====================================
 def display_vehicles(keyword):
-    mobil_sorted = sorted(vehicles, key=lambda x : x['wheels'], reverse=True)
     data_car.clear()
     header_mobil = ['Index', 'Brand','Model', 'Wheels', 'Stock', 'Rent Price per Day','Status']
     rodas = {
@@ -39,7 +38,7 @@ def display_vehicles(keyword):
         2: []
     }
 
-    for index, value in enumerate(mobil_sorted):
+    for index, value in enumerate(vehicles):
         brand = value['brand']
         model = value['model']
         stock = value['stock']
@@ -62,33 +61,7 @@ def display_vehicles(keyword):
     if not rodas[4] and not rodas[2]:
         print("No vehicles available !! ")
 
-# ========================Display main table=====================================
-def display_vehicles_for_edit():
-    data_car.clear()
-    header_mobil = ['Index', 'Brand','Model', 'Wheels', 'Stock', 'Rent Price per Day','Status']
-    rodas = {
-        4: [],
-        2: []
-    }
 
-    for index, value in enumerate(vehicles):
-        brand = value['brand']
-        model = value['model']
-        stock = value['stock']
-        wheels = value['wheels']
-        price = value['price']
-        price = 'RP {:,.0f}'.format(price)
-        avaliable = "Avaliable" if stock > 0 else "Not Avaliable"
-        rodas[wheels].append([index, brand,model, wheels, stock, price,avaliable])
-
-    if rodas[4]:
-        print('\n Four Wheels:')
-        print(tabulate(rodas[4], headers=header_mobil, tablefmt='fancy_grid'))
-    if rodas[2]:
-        print('\nTwo Wheels:')
-        print(tabulate(rodas[2], headers=header_mobil, tablefmt='fancy_grid'))
-    if not rodas[4] and not rodas[2]:
-        print("No vehicles available !! ")
 # ========================Display rental car for user=====================================
 def display_rental():
     data_rent.clear()
@@ -176,7 +149,7 @@ def add_data():
 
 # ========================Delete Data=====================================
 def delete():
-    display_vehicles_for_edit()
+    display_vehicles(None)
     while True:
         option = input('Input vehicle index : ')
         if not option:
@@ -195,7 +168,7 @@ def delete():
             break
 # =================== Update stock and price ================================
 def update_stock_or_price():
-    display_vehicles_for_edit()
+    display_vehicles(None)
     while True:
         option = input('Input vehicle index : ')
         if not option:
@@ -249,6 +222,11 @@ def delete_rental_for_admin():
                 print('Invalid Input')
                 continue
             else:
+                # print(data_rental_car)
+                # print(data_rental_car[option]['amont'])
+                for key,value in enumerate(vehicles):
+                    if value['brand'] == data_rental_car[option]['brand'] and value['model'] == data_rental_car[option]['model']:
+                        value['stock'] += data_rental_car[option]['amount'] 
                 del data_rental_car[option]
                 print('successfully delete rental data')
                 break
@@ -289,9 +267,9 @@ def is_valid_date_format(date_string):
 # ======================= Rent Function ==================
 def rental_vehicle():
     temp_data = {}
-    # display_vehicles_for_edit()
+    # display_vehicles(None)
     while True:
-        display_vehicles_for_edit()
+        display_vehicles(None)
         option = input('Input the index vehicle : ')
         if not option:
             continue
