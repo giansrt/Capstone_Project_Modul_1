@@ -540,7 +540,7 @@ def main():
             else: 
                 while True:
                     print(f'Welcome {user['username'].capitalize()}')
-                    print('List Menu:\n 1. Display Available Vehicles\n 2. Rent Vehicle\n 3. Display Rentals\n 4. Rearch Avaiable Vehiclde with brand/model \n 5. Log out')
+                    print('List Menu:\n 1. Display Vehicles\n 2. Rent Vehicle\n 3. Display Rentals\n 4. Search Avaiable Vehiclde with brand/model \n 5. Log out')
                     menu_num = input('Enter your chosen number: ').strip()
                     if menu_num in ['1','2','3','4','5']:
                         if menu_num == '1':
