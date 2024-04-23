@@ -30,6 +30,7 @@ Before looking at the implementation details and features of the Rental Vehicle 
 
 - Python 3.12.2
 - tabulate library [install via `pip install tabulate`]
+- datetime [install via `pip install datetime`]
 
 ## Installation
 
