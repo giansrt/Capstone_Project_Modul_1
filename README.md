@@ -28,7 +28,7 @@ Before looking at the implementation details and features of the Rental Vehicle 
 ![Flowchart](https://github.com/giansrt/Capstone_Project_Modul_1/blob/main/Diagaram/gambar/main.png)
 ## Requirements
 
-- Python 3.12.2.2
+- Python 3.12.2
 - tabulate library [install via `pip install tabulate`]
 
 ## Installation
