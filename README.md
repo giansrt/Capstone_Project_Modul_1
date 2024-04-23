@@ -25,7 +25,7 @@ This project is a rental vehicle management system implemented in Python. It all
 
 ## Flowchart
 Before looking at the implementation details and features of the Rental Vehicle Management system, let's take a look at the flowchart that illustrates the main processes of this system.The following flowchart provides a visual representation of how users can interact with the system, from user authentication to vehicle management and loaning process.This diagram will help you understand the overall workflow of the system before further exploring the features provided by the application.
-![Flowchart](flowchart.png)
+![Flowchart](https://github.com/giansrt/Capstone_Project_Modul_1/blob/main/Diagaram/gambar/Login_and_display_mnu%20option-Unity.drawio.png)
 ## Requirements
 
 - Python 
