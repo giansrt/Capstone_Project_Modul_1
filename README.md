@@ -33,5 +33,5 @@ This project is a rental vehicle management system implemented in Python. It all
 ### Clone the Repository:
 
 ```bash
-git clone https://github.com/giansrt/rental-vehicle-management.git
+git clone https://github.com/giansrt/Capstone_Project_Modul_1.git
 cd rental-vehicle-management
