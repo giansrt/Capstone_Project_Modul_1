@@ -36,4 +36,4 @@ Before looking at the implementation details and features of the Rental Vehicle 
 ### Clone the Repository:
 
 ```bash
-git clone [https://github.com/giansrt/Capstone_Project_Modul_1.git](https://github.com/giansrt/Capstone_Project_Modul_1.git)
+git clone [https://github.com/giansrt/Capstone_Project_Modul_1.git]
