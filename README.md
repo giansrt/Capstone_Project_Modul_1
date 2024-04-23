@@ -26,7 +26,7 @@ This project is a rental vehicle management system implemented in Python. It all
 ## Requirements
 
 - Python 3.x
-- tabulate library (install via `pip install tabulate`)
+- tabulate library [install via `pip install tabulate`]
 
 ## Installation
 
